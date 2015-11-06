@@ -1,1 +1,1 @@
-include ':weather-view-lib'
+include ':weather-view-lib', ':weather-view-example'

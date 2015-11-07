@@ -7,7 +7,6 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.aapii.codecamp.weatherview.concurrent.BackgroundExecutor;
 
@@ -105,6 +104,11 @@ public class LocationService {
     }
   }
 
+  /**
+   * Setup the location service.
+   *
+   * @param context the context.
+   */
   public static void setup(Context context) {
     locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
@@ -115,8 +119,31 @@ public class LocationService {
     }
   }
 
+  /**
+   * Setup the location service.
+   *
+   * @param context the context.
+   * @param updateIntervalDistances the minimum distance to receive updates.
+   * @param updateIntervalMils the minimum time interval to receive updates.
+   */
+  public static void setup(Context context, long updateIntervalMils, float updateIntervalDistances) {
+    locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+
+    if (checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        && checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
+        == PackageManager.PERMISSION_GRANTED) {
+      locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, updateIntervalMils, updateIntervalDistances,
+          locationListener);
+    }
+  }
+
+  /**
+   * Subscribe a listener for location updates.
+   *
+   * @param context a context (used to get the last location and update the listener the first time)
+   * @param listener the listener.
+   */
   public static void subscribe(Context context, LocationListener listener) {
-    Log.d(LOG_TAG, "Subscribed new listener");
     subscribers.add(listener);
     if (checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         && checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION)
@@ -127,8 +154,7 @@ public class LocationService {
 
   }
 
-  public static void unsubscribe(LocationListener listener) {
-    Log.d(LOG_TAG, "Unsubscribe a listener,");
+  public static void remove(LocationListener listener) {
     subscribers.remove(listener);
   }
 }

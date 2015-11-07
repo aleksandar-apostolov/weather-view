@@ -1,43 +1,42 @@
 <LinearLayout
-  android:orientation="horizontal"
-  android:layout_width="match_parent"
-  android:layout_height="wrap_content"
-  xmlns:android="http://schemas.android.com/apk/res/android">
-
-  <Button
-    android:text="drugi cicki"
-    android:layout_width="0dp"
-    android:layout_weight="1"
-    android:layout_height="wrap_content"/>
-
-  <com.aapii.codecamp.weatherview.example.WeatherFrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_weight="1"
-    android:layout_width="0dp"
-    android:layout_height="match_parent">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+  <com.aapii.codecamp.weatherview.ui.WeatherFrameLayout
+      android:id="@+id/weatherLayout"
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
 
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical">
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
       <View
-        android:background="@android:color/holo_red_dark"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"/>
+          android:layout_width="match_parent"
+          android:layout_height="60dp"
+          android:background="@android:color/holo_red_dark"/>
 
       <View
-        android:background="@android:color/holo_green_light"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"/>
+          android:layout_width="match_parent"
+          android:layout_height="60dp"
+          android:background="@android:color/holo_green_light"/>
 
       <View
-        android:background="@android:color/holo_blue_bright"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"/>
+          android:layout_width="match_parent"
+          android:layout_height="60dp"
+          android:background="@android:color/holo_blue_bright"/>
+
+      <Button
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:text="Button"/>
 
     </LinearLayout>
 
-  </com.aapii.codecamp.weatherview.example.WeatherFrameLayout>
+  </com.aapii.codecamp.weatherview.ui.WeatherFrameLayout>
 
 </LinearLayout>

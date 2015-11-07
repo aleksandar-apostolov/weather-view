@@ -35,7 +35,6 @@ public class ExampleActivity extends AppCompatActivity implements LocationListen
     textView = (TextView) findViewById(R.id.weatherText);
     WeatherService.setApyKey(API_KEY);
     LocationService.setup(this);
-    LocationService.subscribe(this, this);
   }
 
   @Override
@@ -46,9 +45,15 @@ public class ExampleActivity extends AppCompatActivity implements LocationListen
   }
 
   @Override
-  protected void onStop() {
-    super.onStop();
-    LocationService.unsubscribe(this);
+  protected void onResume() {
+    super.onResume();
+    LocationService.subscribe(this, this);
+  }
+
+  @Override
+  protected void onPause() {
+    super.onPause();
+    LocationService.remove(this);
   }
 
   @Override

@@ -2,6 +2,8 @@ package com.aapii.codecamp.weatherview.ui;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.location.Location;
 import android.location.LocationListener;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 
 import com.aapii.codecamp.weatherview.R;
 import com.aapii.codecamp.weatherview.concurrent.BackgroundExecutor;
@@ -33,7 +36,9 @@ public class WeatherFrameLayout extends FrameLayout implements LocationListener 
   private static final String LOG_TAG = "WeatherFrameLayout";
   private boolean isOverlayAdded;
   private GifDrawable drawable;
-  private View overlayView;
+  private View snowAndRainOverlay;
+  private ImageView cloudsOverlay;
+  private Void iceOverlay;
 
   public WeatherFrameLayout(Context context) {
     super(context);
@@ -56,16 +61,16 @@ public class WeatherFrameLayout extends FrameLayout implements LocationListener 
     super.dispatchDraw(canvas);
     if (!isOverlayAdded) {
       isOverlayAdded = true;
-      overlayView = new View(getContext());
-      overlayView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+      snowAndRainOverlay = new View(getContext());
+      snowAndRainOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
           ViewGroup.LayoutParams.MATCH_PARENT));
-      try {
-        drawable = new GifDrawable(getContext().getResources(), R.raw.giphy);
-        overlayView.setBackgroundDrawable(drawable);
-        this.addView(overlayView);
-      } catch (IOException e) {
-        Log.e(LOG_TAG, "Failed to load gif");
-      }
+
+      cloudsOverlay = new ImageView(getContext());
+      cloudsOverlay.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+          ViewGroup.LayoutParams.WRAP_CONTENT));
+
+      this.addView(snowAndRainOverlay);
+      this.addView(cloudsOverlay);
     }
   }
 
@@ -86,12 +91,7 @@ public class WeatherFrameLayout extends FrameLayout implements LocationListener 
         post(new Runnable() {
           @Override
           public void run() {
-            try {
-              drawable = new GifDrawable(getContext().getResources(), R.raw.rain);
-              overlayView.setBackgroundDrawable(drawable);
-            } catch (IOException e) {
-              Log.e(LOG_TAG, "Failed to load gif");
-            }
+            setupWeather(weatherModel);
           }
         });
       }
@@ -101,6 +101,32 @@ public class WeatherFrameLayout extends FrameLayout implements LocationListener 
         Log.e(LOG_TAG, "Failed to get weather.", throwable);
       }
     });
+  }
+
+  private void setupWeather(WeatherModel weatherModel) {
+    try {
+      if (weatherModel.getSnow() != null) {
+        drawable = new GifDrawable(getContext().getResources(), R.raw.snow);
+        drawable.setColorFilter(Color.WHITE, PorterDuff.Mode.SRC_IN);
+        snowAndRainOverlay.setBackgroundDrawable(drawable);
+      } else if (weatherModel.getRain() != null) {
+        drawable = new GifDrawable(getContext().getResources(), R.raw.rain);
+        snowAndRainOverlay.setBackgroundDrawable(drawable);
+      } else {
+        snowAndRainOverlay.setBackgroundDrawable(null);
+      }
+    } catch (IOException e) {
+      Log.e(LOG_TAG, "Failed to load gif");
+    }
+
+    if (weatherModel.getClouds().getAll() > 50) {
+      cloudsOverlay.setBackgroundDrawable(getResources().getDrawable(R.drawable.clouds_light));
+    } else if (weatherModel.getClouds().getAll() > 80) {
+      cloudsOverlay.setBackgroundDrawable(getResources().getDrawable(
+          weatherModel.getSnow() != null ? R.drawable.clouds : R.drawable.clouds_light));
+    } else {
+      cloudsOverlay.setBackgroundDrawable(null);
+    }
   }
 
   @Override

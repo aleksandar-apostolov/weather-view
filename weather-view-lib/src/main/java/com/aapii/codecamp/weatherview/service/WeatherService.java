@@ -19,11 +19,11 @@ public class WeatherService {
     API = key;
   }
 
-  public static WeatherModel getWeather(float lat, float lon) {
+  public static WeatherModel getWeather(double lat, double lon) {
     return Rest.getRestTemplate().getForObject(buildUrl(lat, lon), WeatherModel.class);
   }
 
-  private static String buildUrl(float lat, float lon) {
+  private static String buildUrl(double lat, double lon) {
     return API_URL + "lat=" + lat + "&" + "lon=" + lon + UNITS_SUFFIX + API_KEY_SUFFIX + API;
   }
 }

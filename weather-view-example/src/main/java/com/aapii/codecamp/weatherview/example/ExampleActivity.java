@@ -32,7 +32,7 @@ public class ExampleActivity extends AppCompatActivity implements LocationListen
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_example);
-    textView = (TextView) findViewById(R.id.weatherText);
+//    textView = (TextView) findViewById(R.id.weatherText);
     WeatherService.setApyKey(API_KEY);
     LocationService.setup(this);
   }
